@@ -1,42 +1,114 @@
 import React from 'react';
 import axios from 'axios'
+import { RingLoader } from 'react-spinners';
 import './App.css';
+import { thisExpression } from '@babel/types';
 
 class App extends React.Component{
   state={
     poke_list:[],
-    poke_data:[]
+    poke_data:[],
+    current_pokemon_display:null,
+    loading:true,
+    chain:null,
+    showEvolution:false,
+    name:null,
+    disabled:true
   }
   async componentDidMount(){
-    axios.get("https://pokeapi.co/api/v2/pokemon/?limit=50").then( res =>{
-      console.log(res)
+    this.setState({
+      loading:true
+    })
+    axios.get("https://pokeapi.co/api/v2/pokemon/?limit=30").then( res =>{
+      //console.log(res)
       this.setState({
         poke_list:res.data.results
       })
     }).catch(err =>{
       console.log(err)
     })
+    this.setState({
+      loading:false
+    })
   }
   fetchPokemonData= (index, url)=>{
     let{poke_data}=this.state
     let pokemon=poke_data.filter(poke =>poke.index==index)
-    console.log(pokemon)
     let acc=pokemon.length===0?
       axios.get(url).then( res =>{
-        console.log(res)
         poke_data.push({
           index:index,
           name:res.data.forms[0].name,
           pic:res.data.sprites.front_default,
           states:res.data.stats,
+          id:res.data.id
         })
       }).catch(err =>{
         console.log(err)
       }):null
   }
+  draw_state= (states) =>{
+   return states.map((stat,i)=>
+    <div className="columns" key={i}>
+      <div className="column is-6">{stat.stat.name}</div>
+      <div className="column is-3">{stat.base_stat}</div>
+    </div>
+    )
+  }
+  FetchEvolution= async (id) =>{
+    axios.get(`https://pokeapi.co/api/v2/evolution-chain/${id}`).then(res =>{
+      
+      this.setState({
+        chain:res.data.chain,
+        disabled:false
+      })
+    })
+  }
+  showEvolution=()=>{
+    let {chain}=this.state
+    console.log(chain)
+    return chain.evolves_to !=null && chain.evolves_to.length>0?
+     <div className="">
+      <p>{this.state.name}  </p>
+      {this.continueEvolution(chain.evolves_to[0])}
+    </div>:
+    <div>no evolution</div>
+  }
+  continueEvolution=(chain)=>{
+  return <p>{chain.species.name }
+  {
+    chain.evolves_to !=null && chain.evolves_to.length>0?
+      this.continueEvolution(chain.evolves_to[0]):null
+    
+  }
+  </p>
+  }
+  DisplayPokemon=( )=>{
+    let pokemon=this.state.current_pokemon_display[0]
+    //console.log(pokemon)
+    this.FetchEvolution(pokemon.id)
+    return <div className="states is-flex aic">
+        <img className="pokemon-pic" src={pokemon.pic}/>
+        <p className="pokemon-name">{pokemon.name}</p>
+        {this.draw_state(pokemon.states)}
+        <button className="evolution-button" onClick={()=>this.setState({
+          showEvolution:true,
+          name:pokemon.name
+        })
+        }
+        disabled={this.state.disabled}>Show Evolution</button>
+      </div>
+  }
   draw_list=()=>{
    return this.state.poke_list.map((pokemon,i)=>
-      <div onMouseEnter={()=>this.fetchPokemonData(i,pokemon.url)} className="list-entry columns" key={i}>
+      <div 
+        onMouseEnter={()=>this.fetchPokemonData(i,pokemon.url)} 
+        onClick={()=> this.setState({
+          current_pokemon_display:this.state.poke_data.filter(poke =>poke.index==i),
+          showEvolution:false
+        })}
+        className="list-entry columns"
+        key={i}>
         <div className="column is-2">
           {i}
         </div>
@@ -47,7 +119,20 @@ class App extends React.Component{
     )
   }
   render(){
+    //console.log(this.state.current_pokemon_display)
+    let {current_pokemon_display,loading,showEvolution}=this.state
     return (
+      
+        loading?
+        <div className="pre-loader">
+        <div className='sweet-loading'>
+        <RingLoader
+          color={'#ef5350'} 
+          loading={this.state.loading} 
+        />
+      </div>
+      </div>:
+      
       <div className="container">
         
         <div className="header">
@@ -58,6 +143,14 @@ class App extends React.Component{
           <div className="column is-8">
             {this.draw_list()}
           </div>
+          <div className="column is-4">
+            {current_pokemon_display!=null?
+             this.DisplayPokemon():null}
+             {
+               showEvolution?this.showEvolution():null
+             }
+          </div>
+          
         </div>
       </div>
     );

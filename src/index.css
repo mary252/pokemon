@@ -32,3 +32,48 @@ code {
   border-bottom: 1px solid rgb(134, 134, 134);
   cursor: pointer;
 }
+
+.pre-loader {
+  width: 100%;
+  height: 100%;
+  background-color: #f9f9f9;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pre-loader img {
+  height: 80px;
+}
+
+.animated-background {
+  animation-duration: 10s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: pulse;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+  position: relative;
+}
+.states{
+  padding: 2px 15px;
+  flex-direction: column;
+}
+
+.pokemon-pic{
+  margin-left: auto;
+margin-right: auto;
+width: 50%;
+}
+
+.pokemon-name{
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
