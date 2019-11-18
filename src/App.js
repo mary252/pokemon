@@ -116,7 +116,7 @@ class App extends React.Component{
         className="list-entry columns"
         key={i}>
         <div className="column is-2">
-          {i}
+          {i+1}
         </div>
         <div className="column is-5">
           {pokemon.name}
