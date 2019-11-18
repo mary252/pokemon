@@ -77,3 +77,14 @@ width: 50%;
   margin-bottom: 10px;
 }
 
+.evolution-button{
+  background-color: #ef5350;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  height: 30px;
+}
+.evolution-button:hover{
+  background-color: #f09d9c;
+
+}

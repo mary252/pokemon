@@ -19,7 +19,7 @@ class App extends React.Component{
     this.setState({
       loading:true
     })
-    axios.get("https://pokeapi.co/api/v2/pokemon/?limit=30").then( res =>{
+    axios.get(`${process.env.REACT_APP_URL}/pokemon/?limit=30`).then( res =>{
       //console.log(res)
       this.setState({
         poke_list:res.data.results
@@ -56,7 +56,7 @@ class App extends React.Component{
     )
   }
   FetchEvolution= async (id) =>{
-    axios.get(`https://pokeapi.co/api/v2/evolution-chain/${id}`).then(res =>{
+    axios.get(`${process.env.REACT_APP_URL}/evolution-chain/${id}`).then(res =>{
       
       this.setState({
         chain:res.data.chain,
@@ -87,6 +87,7 @@ class App extends React.Component{
     let pokemon=this.state.current_pokemon_display[0]
     //console.log(pokemon)
     this.FetchEvolution(pokemon.id)
+    
     return <div className="states is-flex aic">
         <img className="pokemon-pic" src={pokemon.pic}/>
         <p className="pokemon-name">{pokemon.name}</p>
@@ -103,10 +104,7 @@ class App extends React.Component{
    return this.state.poke_list.map((pokemon,i)=>
       <div 
         onMouseEnter={()=>this.fetchPokemonData(i,pokemon.url)} 
-        onClick={()=> this.setState({
-          current_pokemon_display:this.state.poke_data.filter(poke =>poke.index==i),
-          showEvolution:false
-        })}
+        onClick={()=> this.listClick(i)}
         className="list-entry columns"
         key={i}>
         <div className="column is-2">
@@ -118,9 +116,18 @@ class App extends React.Component{
       </div>
     )
   }
+  listClick = (i) =>{
+    let pokemon=this.state.poke_data.filter(poke =>poke.index==i)
+    this.setState({
+      current_pokemon_display:pokemon,
+      showEvolution:false
+    })
+        
+    this.props.history.push(`?pokemon=${pokemon[0].id}`);
+  }
   render(){
-    //console.log(this.state.current_pokemon_display)
     let {current_pokemon_display,loading,showEvolution}=this.state
+ 
     return (
       
         loading?
@@ -146,9 +153,11 @@ class App extends React.Component{
           <div className="column is-4">
             {current_pokemon_display!=null?
              this.DisplayPokemon():null}
+             <div className="is-flex aic">
              {
                showEvolution?this.showEvolution():null
              }
+             </div>
           </div>
           
         </div>
