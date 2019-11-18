@@ -2,9 +2,10 @@ import React from 'react';
 import axios from 'axios'
 import { RingLoader } from 'react-spinners';
 import './App.css';
-import { thisExpression } from '@babel/types';
+
 
 class App extends React.Component{
+  
   state={
     poke_list:[],
     poke_data:[],
@@ -15,12 +16,13 @@ class App extends React.Component{
     name:null,
     disabled:true
   }
+
   async componentDidMount(){
     this.setState({
       loading:true
     })
     axios.get(`${process.env.REACT_APP_URL}/pokemon/?limit=30`).then( res =>{
-      //console.log(res)
+
       this.setState({
         poke_list:res.data.results
       })
@@ -31,6 +33,7 @@ class App extends React.Component{
       loading:false
     })
   }
+
   fetchPokemonData= (index, url)=>{
     let{poke_data}=this.state
     let pokemon=poke_data.filter(poke =>poke.index==index)
@@ -47,6 +50,7 @@ class App extends React.Component{
         console.log(err)
       }):null
   }
+
   draw_state= (states) =>{
    return states.map((stat,i)=>
     <div className="columns" key={i}>
@@ -55,6 +59,7 @@ class App extends React.Component{
     </div>
     )
   }
+
   FetchEvolution= async (id) =>{
     axios.get(`${process.env.REACT_APP_URL}/evolution-chain/${id}`).then(res =>{
       
@@ -64,9 +69,9 @@ class App extends React.Component{
       })
     })
   }
+
   showEvolution=()=>{
     let {chain}=this.state
-    console.log(chain)
     return chain.evolves_to !=null && chain.evolves_to.length>0?
      <div className="">
       <p>{this.state.name}  </p>
@@ -74,6 +79,7 @@ class App extends React.Component{
     </div>:
     <div>no evolution</div>
   }
+
   continueEvolution=(chain)=>{
   return <p>{chain.species.name }
   {
@@ -83,9 +89,10 @@ class App extends React.Component{
   }
   </p>
   }
+
   DisplayPokemon=( )=>{
     let pokemon=this.state.current_pokemon_display[0]
-    //console.log(pokemon)
+
     this.FetchEvolution(pokemon.id)
     
     return <div className="states is-flex aic">
@@ -100,6 +107,7 @@ class App extends React.Component{
         disabled={this.state.disabled}>Show Evolution</button>
       </div>
   }
+
   draw_list=()=>{
    return this.state.poke_list.map((pokemon,i)=>
       <div 
@@ -116,6 +124,7 @@ class App extends React.Component{
       </div>
     )
   }
+
   listClick = (i) =>{
     let pokemon=this.state.poke_data.filter(poke =>poke.index==i)
     this.setState({
@@ -125,6 +134,7 @@ class App extends React.Component{
         
     this.props.history.push(`?pokemon=${pokemon[0].id}`);
   }
+
   render(){
     let {current_pokemon_display,loading,showEvolution}=this.state
  

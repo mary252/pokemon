@@ -22,7 +22,12 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "node-sass": "4.11.0"
+    "eslint": "^6.6.0",
+    "node-sass": "4.11.0",
+    "prettier": "^1.19.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "nock": "^10.0.6"
   },
   "browserslist": {
     "production": [
