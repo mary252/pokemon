@@ -155,7 +155,7 @@ class App extends React.Component{
         <div className="header">
           <img className="header-pic" src={require("./assets/Pokémon_logo.svg")}/>
         </div>
-        <p className="label">Pokemons</p>
+        <p className="label">Pokemon</p>
         <div className="box columns">
           <div className="column is-8">
             {this.draw_list()}
