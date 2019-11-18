@@ -153,7 +153,7 @@ class App extends React.Component{
       <div className="container">
         
         <div className="header">
-          <img className="header-pic" src={require("./assets/Pokémon_logo.svg")}/>
+          <img className="header-pic" src={"https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png"}/>
         </div>
         <p className="label">Pokemon</p>
         <div className="box columns">
