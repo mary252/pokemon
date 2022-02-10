@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "eslint": "^6.6.0",
-    "node-sass": "4.11.0",
+    "node-sass": "7.0.0",
     "prettier": "^1.19.1",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
